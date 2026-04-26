@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-crimson: #8B0000;
+  --color-crimson-bright: #B22222;
+  --color-crimson-glow: #C0392B;
+  --color-black: #080808;
+  --color-black-card: #111111;
+  --color-black-border: #1A1A1A;
+  --color-white: #F5F5F0;
+  --color-white-muted: #A0A0A0;
+  --color-white-subtle: #2A2A2A;
+  
+  --font-display: var(--font-cormorant), serif;
+  --font-body: var(--font-dm-sans), sans-serif;
+  --font-accent: var(--font-bebas), sans-serif;
+
+  --animate-marquee: marquee 25s linear infinite;
+  
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+:root {
+  --background: var(--color-black);
+  --foreground: var(--color-white);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  /* cursor: none; Desktop only via JS/Tailwind if preferred */
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom Custom Cursor */
+.cursor-dot {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  z-index: 9999;
+  mix-blend-mode: exclusion;
+  transition: transform 0.15s ease-out;
+  transform: translate(-50%, -50%);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
