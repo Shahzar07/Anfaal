@@ -1,13 +1,85 @@
+'use client';
+import { useEffect, useState } from 'react';
 import { HeroSection } from '@/components/HeroSection';
 import { MarqueeStrip } from '@/components/MarqueeStrip';
 import { CategoryStrip } from '@/components/CategoryStrip';
 import { ProductGrid } from '@/components/ProductGrid';
-import { products } from '@/lib/products';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
+import { products as hardcodedProducts } from '@/lib/products';
 import Link from 'next/link';
 
 export default function Home() {
-  const featuredDrops = products.filter(p => ['p-1', 'p-4', 'p-8', 'p-9'].includes(p.id));
-  const bestSellers = products.filter(p => ['p-2', 'p-11', 'p-6', 'p-10'].includes(p.id));
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        let firestoreProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // Quick migration fixing broken Unsplash URLs from early seed data
+        const brokenImageMap: Record<string, string> = {
+          '1526414963567-0c7ed0e6871a': 'https://picsum.photos/seed/p8/800/1000',
+          '1556821840-0a25f18c2fc9': 'https://picsum.photos/seed/p10/800/1000',
+          '1563280145-d85626c9f2b8': 'https://picsum.photos/seed/p11_2/800/1000',
+          '1563280145-2bc5d3c8d17d': 'https://picsum.photos/seed/p11/800/1000',
+          '1620799139834-6b8f844fb2b5': 'https://picsum.photos/seed/p3_2/800/1000',
+          '1556821840-b63f27f6b216': 'https://picsum.photos/seed/p7/800/1000',
+          '1556821840-02ba4bb0c4a4': 'https://picsum.photos/seed/p7_2/800/1000',
+        };
+
+        firestoreProducts = firestoreProducts.map(p => {
+          if (!p.images) return p;
+          let changed = false;
+          let newImages = p.images.map((img: string) => {
+            let replaced = img;
+            Object.keys(brokenImageMap).forEach(key => {
+              if (replaced.includes(key)) replaced = brokenImageMap[key];
+            });
+            if (replaced !== img) changed = true;
+            return replaced;
+          });
+          
+          if (changed) {
+            setDoc(doc(db, 'products', p.id), { images: newImages }, { merge: true }).catch(console.error);
+          }
+
+          return { ...p, images: newImages };
+        });
+        
+        // Seed database if empty
+        if (firestoreProducts.length === 0) {
+          console.log('Seeding products...');
+          for (const p of hardcodedProducts) {
+            await setDoc(doc(db, 'products', p.id), {
+              name: p.name,
+              price: p.price,
+              category: p.category,
+              description: p.description,
+              images: p.images,
+              sizes: p.sizes,
+              stock: 10,
+              badge: p.badge || null,
+              originalPrice: p.originalPrice || null,
+              createdAt: Date.now(),
+              updatedAt: Date.now()
+            });
+          }
+          const newSnap = await getDocs(collection(db, 'products'));
+          firestoreProducts = newSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+
+        setProducts(firestoreProducts);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadProducts();
+  }, []);
+
+  const featuredDrops = products.slice(0, 4);
+  const bestSellers = products.slice(-4).reverse();
 
   return (
     <>

@@ -122,7 +122,7 @@ export function CartDrawer() {
                   Shipping and taxes calculated at checkout. Free shipping on orders over PKR 3,000.
                 </p>
                 <Link
-                  href="/cart"
+                  href="/checkout"
                   onClick={toggleCart}
                   className="block w-full text-center py-4 bg-crimson text-white font-accent tracking-widest text-lg hover:bg-crimson-glow transition-all duration-300"
                 >

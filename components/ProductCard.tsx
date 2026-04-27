@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden bg-black-card border border-transparent group-hover:border-crimson/50 transition-colors duration-500">
-        <Link href={`/shop/${product.slug}`} className="absolute inset-0 z-10 w-full h-full block">
+        <Link href={`/shop/${product.slug || product.id}`} className="absolute inset-0 z-10 w-full h-full block">
           
           {/* Main Image */}
           <div className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
@@ -75,7 +75,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Info Container */}
       <div className="pt-4 flex flex-col items-start">
-        <Link href={`/shop/${product.slug}`} className="w-full">
+        <Link href={`/shop/${product.slug || product.id}`} className="w-full">
           <h3 className="font-display text-xl sm:text-2xl text-white group-hover:text-crimson-bright transition-colors truncate">
             {product.name}
           </h3>

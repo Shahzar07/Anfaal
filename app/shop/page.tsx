@@ -2,13 +2,15 @@
 
 import { useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { products } from '@/lib/products';
 import { Category, Size } from '@/lib/types';
 import { ProductGrid } from '@/components/ProductGrid';
 import { FilterSidebar } from '@/components/FilterSidebar';
+import { db } from '@/lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
+import { useEffect } from 'react';
 
 function ShopContent() {
   const searchParams = useSearchParams();
@@ -22,6 +24,22 @@ function ShopContent() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortOption, setSortOption] = useState<'featured' | 'newest' | 'price-low' | 'price-high'>('featured');
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        setProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];

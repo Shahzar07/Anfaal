@@ -1,14 +1,14 @@
 'use client';
 
-import { useMemo } from 'react';
-import { products } from '@/lib/products';
+import { useMemo, useState, use, useEffect } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
 import { ProductCard } from '@/components/ProductCard';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Minus, Plus, Heart, ShoppingBag, Truck, RotateCcw } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
-import { useState, use } from 'react';
 
 export default function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
@@ -18,19 +18,49 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'shipping'>('description');
   
+  const [product, setProduct] = useState<any | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const addItem = useCartStore(state => state.addItem);
 
-  const product = useMemo(() => {
-    return products.find(p => p.slug === resolvedParams.slug);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const q = query(collection(db, 'products'), where('slug', '==', resolvedParams.slug), limit(1));
+        const snap = await getDocs(q);
+        
+        // Wait, what if slug wasn't the ID and we don't have a slug field?
+        // Ah, our firebase products don't necessarily have a slug if added via the admin!
+        // We should query by 'id' since in shop/page.tsx Link points to `/shop/${product.id}`
+        // Wait! The router uses `[slug]`. If the Link earlier went to `/shop/${product.id}`...
+        const qById = query(collection(db, 'products'), where('__name__', '==', resolvedParams.slug));
+        const snapById = await getDocs(qById);
+
+        let pData = null;
+        if (!snapById.empty) {
+          pData = { id: snapById.docs[0].id, ...snapById.docs[0].data() };
+        } else if (!snap.empty) {
+          pData = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        }
+
+        if (pData) {
+          setProduct(pData);
+          const relatedQ = query(collection(db, 'products'), limit(4));
+          const relSnap = await getDocs(relatedQ);
+          setRelatedProducts(relSnap.docs.map(d => ({ id: d.id, ...d.data() })).filter(d => d.id !== pData?.id));
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
   }, [resolvedParams.slug]);
 
-  if (!product) {
-    notFound();
-  }
-
-  const relatedProducts = useMemo(() => {
-    return products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-  }, [product]);
+  if (loading) return <div className="h-screen w-full bg-black flex items-center justify-center font-accent tracking-widest text-crimson">LOADING...</div>;
+  if (!product) return notFound();
 
   const handleAddToCart = () => {
     if (!selectedSize) {

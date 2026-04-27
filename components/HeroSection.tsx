@@ -56,7 +56,7 @@ export function HeroSection() {
 
         {/* Main Title Word Reveal */}
         <motion.h1 
-          className="font-display text-[90px] md:text-[160px] leading-none text-white tracking-tight select-none"
+          className="font-display text-[13vw] sm:text-[15vw] md:text-[120px] lg:text-[160px] leading-[0.9] text-white tracking-tight select-none"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -70,7 +70,7 @@ export function HeroSection() {
 
         {/* Subtitle */}
         <motion.p 
-          className="mt-4 md:mt-6 font-body text-sm md:text-base tracking-[0.3em] md:tracking-[0.5em] text-white-muted uppercase max-w-2xl text-center leading-relaxed"
+          className="mt-6 md:mt-8 font-body text-xs sm:text-sm md:text-base tracking-[0.2em] sm:tracking-[0.3em] md:tracking-[0.5em] text-white-muted uppercase max-w-2xl text-center leading-relaxed px-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2, duration: 0.8 }}
@@ -80,15 +80,15 @@ export function HeroSection() {
 
         {/* CTAs */}
         <motion.div 
-          className="mt-12 flex flex-col sm:flex-row items-center gap-6"
+          className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto px-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.8 }}
         >
-          <Link href="/shop" className="bg-crimson px-10 py-4 font-accent text-sm shadow-[0_0_20px_rgba(139,0,0,0.4)] hover:bg-[#B22222] transition-colors text-white uppercase tracking-widest text-center w-64 sm:w-auto">
+          <Link href="/shop" className="bg-crimson px-8 sm:px-10 py-4 font-accent text-sm md:text-base shadow-[0_0_20px_rgba(139,0,0,0.4)] hover:bg-[#B22222] transition-colors text-white uppercase tracking-widest text-center w-full sm:w-auto">
             Shop Now →
           </Link>
-          <Link href="/shop" className="border border-white/30 backdrop-blur-sm px-10 py-4 font-accent text-sm hover:bg-white hover:text-black transition-colors text-white uppercase tracking-widest text-center w-64 sm:w-auto">
+          <Link href="/lookbook" className="border border-white/30 backdrop-blur-sm px-8 sm:px-10 py-4 font-accent text-sm md:text-base hover:bg-white hover:text-black transition-colors text-white uppercase tracking-widest text-center w-full sm:w-auto">
             View Lookbook
           </Link>
         </motion.div>

@@ -40,7 +40,7 @@ export const products: Product[] = [
     sizes: ['S', 'M', 'L', 'XL'],
     images: [
       'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&q=80',
-      'https://images.unsplash.com/photo-1620799139834-6b8f844fb2b5?w=800&q=80'
+      'https://picsum.photos/seed/p3_2/800/1000'
     ],
     description: 'A deep crimson crewneck that pairs perfectly with dark denim. Features ribbed cuffs and a subtle embroidered ANFAAL logo on the sleeve.',
     inStock: true,
@@ -97,8 +97,8 @@ export const products: Product[] = [
     price: 4500,
     sizes: ['M', 'L', 'XL', 'XXL'],
     images: [
-      'https://images.unsplash.com/photo-1556821840-b63f27f6b216?w=800&q=80',
-      'https://images.unsplash.com/photo-1556821840-02ba4bb0c4a4?w=800&q=80'
+      'https://picsum.photos/seed/p7/800/1000',
+      'https://picsum.photos/seed/p7_2/800/1000'
     ],
     description: 'Pigment-dyed grey for a worn-in, vintage look. Boxy fit with dropped shoulders.',
     inStock: true,
@@ -112,7 +112,7 @@ export const products: Product[] = [
     sizes: ['S', 'M', 'L'],
     images: [
       'https://images.unsplash.com/photo-1517423568366-8b83523034fd?w=800&q=80',
-      'https://images.unsplash.com/photo-1526414963567-0c7ed0e6871a?w=800&q=80'
+      'https://picsum.photos/seed/p8/800/1000'
     ],
     badge: 'NEW',
     description: 'Lightweight poly-spandex blend perfect for autumn runs or city commutes. Reflective piping for low-light visibility.',
@@ -142,7 +142,7 @@ export const products: Product[] = [
     sizes: ['S', 'M', 'L', 'XL'],
     images: [
       'https://images.unsplash.com/photo-1572495641004-28421ae52e52?w=800&q=80',
-      'https://images.unsplash.com/photo-1556821840-0a25f18c2fc9?w=800&q=80'
+      'https://picsum.photos/seed/p10/800/1000'
     ],
     badge: 'SALE',
     description: 'Pure stark white. Keep it clean. Features matte silver hardware on the aglets.',
@@ -156,8 +156,8 @@ export const products: Product[] = [
     price: 5200,
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     images: [
-      'https://images.unsplash.com/photo-1563280145-2bc5d3c8d17d?w=800&q=80',
-      'https://images.unsplash.com/photo-1563280145-d85626c9f2b8?w=800&q=80'
+      'https://picsum.photos/seed/p11/800/1000',
+      'https://picsum.photos/seed/p11_2/800/1000'
     ],
     badge: 'BESTSELLER',
     description: 'Our most versatile sweatshirt. The Onyx Crewneck can be dressed up or down. Mercerized cotton exterior.',

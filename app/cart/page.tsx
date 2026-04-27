@@ -124,10 +124,10 @@ export default function CartPage() {
                   <span>PKR {total.toLocaleString()}</span>
                 </div>
 
-                <button className="w-full bg-white text-black font-accent tracking-widest py-4 text-xl hover:bg-crimson hover:text-white flex items-center justify-between px-6 transition-all duration-300 group">
+                <Link href="/checkout" className="w-full bg-white text-black font-accent tracking-widest py-4 text-xl hover:bg-crimson hover:text-white flex items-center justify-between px-6 transition-all duration-300 group">
                    PROCEED TO CHECKOUT
                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                </button>
+                </Link>
 
                 <div className="mt-8 space-y-4">
                    <div className="flex items-center gap-4 text-white-muted">
