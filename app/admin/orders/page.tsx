@@ -103,24 +103,24 @@ export default function AdminOrders() {
 
       {/* Order Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
-              <h3 className="font-display text-xl">Order Details</h3>
+        <div className="fixed inset-0 z-[9999] bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 border border-gray-100 relative">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10 w-full">
+              <h3 className="font-display text-xl text-black">Order Details</h3>
               <button 
                 onClick={() => setSelectedOrder(null)}
-                className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 text-gray-500 hover:text-black rounded-full transition-colors"
                 aria-label="Close"
               >
                 <X size={20} />
               </button>
             </div>
             
-            <div className="p-6 overflow-y-auto custom-scrollbar font-body text-sm space-y-8">
+            <div className="p-6 overflow-y-auto custom-scrollbar font-body text-sm space-y-8 bg-white">
               {/* Top info */}
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-bold text-lg mb-1">Order #{selectedOrder.id}</h4>
+                  <h4 className="font-bold text-lg mb-1 text-black">Order #{selectedOrder.id}</h4>
                   <p className="text-gray-500">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
@@ -131,43 +131,43 @@ export default function AdminOrders() {
               </div>
 
               {/* Customer and Shipping grids */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
                 <div>
-                  <h5 className="font-bold mb-2 uppercase text-xs tracking-wider text-gray-500">Customer Details</h5>
-                  <p className="font-medium text-base">{selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}</p>
-                  <p className="text-gray-600">{selectedOrder.customer?.email}</p>
+                  <h5 className="font-bold mb-2 uppercase text-[10px] tracking-widest text-gray-400">Customer Details</h5>
+                  <p className="font-medium text-base text-black">{selectedOrder.customer?.firstName} {selectedOrder.customer?.lastName}</p>
+                  <p className="text-gray-600 mt-1">{selectedOrder.customer?.email}</p>
                   <p className="text-gray-600">{selectedOrder.customer?.phone}</p>
                 </div>
                 <div>
-                  <h5 className="font-bold mb-2 uppercase text-xs tracking-wider text-gray-500">Shipping Address</h5>
-                  <p className="text-gray-800">
+                  <h5 className="font-bold mb-2 uppercase text-[10px] tracking-widest text-gray-400">Shipping Address</h5>
+                  <p className="text-gray-800 leading-relaxed">
                     {selectedOrder.customer?.address}<br />
                     {selectedOrder.customer?.apartment && <>{selectedOrder.customer?.apartment}<br /></>}
-                    {selectedOrder.customer?.city}, {selectedOrder.customer?.postalCode}
+                    {selectedOrder.customer?.city}{selectedOrder.customer?.postalCode ? `, ${selectedOrder.customer?.postalCode}` : ''}
                   </p>
                 </div>
               </div>
 
               {/* Items */}
               <div>
-                <h5 className="font-bold mb-4 uppercase text-xs tracking-wider text-gray-500 border-b pb-2">Items Ordered</h5>
+                <h5 className="font-bold mb-4 uppercase text-[10px] tracking-widest text-gray-400 border-b border-gray-100 pb-2">Items Ordered</h5>
                 <div className="space-y-4">
                   {selectedOrder.items?.map((item: any, idx: number) => (
-                    <div key={idx} className="flex gap-4">
-                      <div className="w-16 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                    <div key={idx} className="flex gap-4 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                      <div className="w-16 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
                         {item.image ? (
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-400">No Img</div>
                         )}
                       </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-base">{item.name}</p>
-                        <p className="text-gray-500 text-sm">Size: {item.size}</p>
+                      <div className="flex-1 flex flex-col justify-center">
+                        <p className="font-bold text-base text-black">{item.name}</p>
+                        <p className="text-gray-500 text-xs mt-1 uppercase tracking-wider">Size: {item.size}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="font-medium">PKR {item.price?.toLocaleString()}</p>
-                        <p className="text-gray-500 text-sm">Qty: {item.quantity}</p>
+                      <div className="text-right flex flex-col justify-center">
+                        <p className="font-medium text-black">PKR {Number(item.price)?.toLocaleString()}</p>
+                        <p className="text-gray-500 text-xs mt-1">Qty: {item.quantity}</p>
                       </div>
                     </div>
                   ))}
@@ -175,31 +175,31 @@ export default function AdminOrders() {
               </div>
 
               {/* Totals */}
-              <div className="border-t pt-4">
-                <div className="space-y-2 max-w-xs ml-auto">
-                  <div className="flex justify-between text-gray-600">
+              <div className="border-t border-gray-100 pt-6">
+                <div className="space-y-3 max-w-xs ml-auto">
+                  <div className="flex justify-between text-gray-600 text-sm">
                     <span>Subtotal</span>
-                    <span>PKR {selectedOrder.total?.toLocaleString()}</span>
+                    <span>PKR {Number(selectedOrder.total)?.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-gray-600">
+                  <div className="flex justify-between text-gray-600 text-sm">
                     <span>Shipping</span>
-                    <span>Free</span>
+                    <span>Complimentary</span>
                   </div>
-                  <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
+                  <div className="flex justify-between font-bold text-lg pt-3 border-t border-gray-100 text-black">
                     <span>Total</span>
-                    <span>PKR {selectedOrder.total?.toLocaleString()}</span>
+                    <span>PKR {Number(selectedOrder.total)?.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
-               <div className="flex items-center gap-3">
-                 <span className="font-body text-sm font-medium">Update Status:</span>
+            <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4 w-full sticky bottom-0">
+               <div className="flex items-center gap-3 w-full sm:w-auto">
+                 <span className="font-body text-xs uppercase tracking-widest font-medium text-gray-500">Update Status:</span>
                  <select 
                     value={selectedOrder.status || 'pending'} 
                     onChange={(e) => updateStatus(selectedOrder.id, e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+                    className="border border-gray-300 bg-white rounded-md px-3 py-2 text-sm focus:outline-none focus:border-black font-medium transition-colors"
                   >
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>
@@ -210,9 +210,9 @@ export default function AdminOrders() {
                </div>
                <button 
                 onClick={() => setSelectedOrder(null)} 
-                className="px-6 py-2 bg-black text-white rounded-md font-medium text-sm hover:bg-gray-800 transition-colors"
+                className="w-full sm:w-auto px-8 py-2.5 bg-black text-white rounded-lg font-accent tracking-widest text-xs uppercase hover:bg-gray-800 transition-colors"
                >
-                 Close
+                 Close Manifest
                </button>
             </div>
           </div>

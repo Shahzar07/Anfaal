@@ -4,7 +4,8 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { Package, Truck, CheckCircle, Clock } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, MapPin, Tag } from 'lucide-react';
+import Link from 'next/link';
 
 export default function OrderTrackingDetail({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -45,120 +46,148 @@ export default function OrderTrackingDetail({ params }: { params: Promise<{ id: 
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white flex flex-col selection:bg-crimson selection:text-white">
       <Navbar />
-      <main className="flex-1 container mx-auto px-6 py-24 max-w-3xl">
-        {loading ? (
-          <div className="flex justify-center items-center py-20">
-             <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-          </div>
-        ) : error ? (
-          <div className="text-center py-20">
-            <h2 className="font-display text-2xl text-crimson mb-4">Error</h2>
-            <p className="font-body text-white-muted">{error}</p>
-          </div>
-        ) : order ? (
-          <div className="bg-[#111] p-8 md:p-12 border border-white/10 rounded-xl">
-            <h1 className="font-display text-3xl mb-2">Order #{order.id}</h1>
-            <p className="font-body text-sm text-white-muted mb-12">
-              Placed on {new Date(order.createdAt).toLocaleDateString()}
-            </p>
-
-            {/* Tracking Timeline */}
-            <div className="relative mb-16">
-               {order.status === 'cancelled' ? (
-                 <div className="text-center p-6 bg-red-900/20 border border-red-500/30 rounded-lg">
-                   <h3 className="font-bold text-red-500">Order Cancelled</h3>
-                   <p className="text-red-400/80 text-sm mt-1">This order has been cancelled and will not be delivered.</p>
-                 </div>
-               ) : (
-                 <div className="flex justify-between items-center relative">
-                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-white/10 -z-0"></div>
-                   <div 
-                     className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white transition-all duration-500 ease-in-out -z-0"
-                     style={{ width: `${((getStatusStep(order.status) - 1) / 2) * 100}%` }}
-                   ></div>
-
-                   <div className="relative z-10 flex flex-col items-center gap-3">
-                     <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-[#111] transition-colors ${getStatusStep(order.status) >= 1 ? 'bg-white text-black' : 'bg-[#222] text-white-muted'}`}>
-                       <Clock size={20} />
-                     </div>
-                     <span className="font-accent tracking-widest text-xs uppercase hidden md:block">Processing</span>
-                   </div>
-
-                   <div className="relative z-10 flex flex-col items-center gap-3">
-                     <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-[#111] transition-colors ${getStatusStep(order.status) >= 2 ? 'bg-white text-black' : 'bg-[#222] text-white-muted'}`}>
-                       <Truck size={20} />
-                     </div>
-                     <span className="font-accent tracking-widest text-xs uppercase hidden md:block">Shipped</span>
-                   </div>
-
-                   <div className="relative z-10 flex flex-col items-center gap-3">
-                     <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-[#111] transition-colors ${getStatusStep(order.status) >= 3 ? 'bg-white text-black' : 'bg-[#222] text-white-muted'}`}>
-                       <CheckCircle size={20} />
-                     </div>
-                     <span className="font-accent tracking-widest text-xs uppercase hidden md:block">Delivered</span>
-                   </div>
-                 </div>
-               )}
+      
+      <main className="flex-1 pt-32 pb-24">
+        <div className="container mx-auto px-6 lg:px-12">
+          {loading ? (
+            <div className="flex flex-col justify-center items-center py-40">
+               <div className="w-12 h-12 border border-white/20 border-t-white rounded-full animate-spin"></div>
+               <p className="mt-6 font-accent tracking-widest text-xs uppercase text-white/50">Locating Parcel...</p>
             </div>
-
-            {/* Order Details */}
-            <div className="space-y-8 font-body">
-              <div>
-                <h3 className="font-accent tracking-widest text-xs text-white-muted uppercase mb-4 border-b border-white/10 pb-2">Shipping Information</h3>
-                <div className="text-sm space-y-1">
-                  <p className="font-bold">{order.customer?.firstName} {order.customer?.lastName}</p>
-                  <p>{order.customer?.address}</p>
-                  {order.customer?.apartment && <p>{order.customer?.apartment}</p>}
-                  <p>{order.customer?.city}, {order.customer?.postalCode}</p>
-                  <p className="text-white-muted mt-2">{order.customer?.phone}</p>
+          ) : error ? (
+            <div className="max-w-2xl mx-auto text-center py-40">
+              <h2 className="font-display text-4xl mb-4">NOT FOUND</h2>
+              <p className="font-body text-white/50 mb-8">{error}</p>
+              <Link href="/track" className="font-accent tracking-widest text-sm text-crimson hover:text-white transition-colors uppercase border-b border-crimson/30 hover:border-white pb-1">
+                Try Another Search
+              </Link>
+            </div>
+          ) : order ? (
+            <div className="max-w-4xl mx-auto">
+              <Link href="/track" className="inline-flex items-center text-white/40 hover:text-white transition-colors font-accent tracking-widest text-xs uppercase mb-12">
+                ← Back to Search
+              </Link>
+              
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 pb-8 border-b border-white/10">
+                <div>
+                  <h1 className="font-display text-4xl md:text-5xl uppercase tracking-tight mb-2">Order {order.id.slice(-8)}</h1>
+                  <p className="font-accent tracking-widest text-xs text-white/40 uppercase">
+                    Dated {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="text-left md:text-right">
+                  <p className="font-accent tracking-widest text-xs text-white/40 uppercase mb-1">Status</p>
+                  <p className={`font-display text-2xl ${order.status === 'cancelled' ? 'text-crimson' : 'text-white'}`}>
+                    {order.status?.toUpperCase() || 'PROCESSING'}
+                  </p>
                 </div>
               </div>
 
-              <div>
-                <h3 className="font-accent tracking-widest text-xs text-white-muted uppercase mb-4 border-b border-white/10 pb-2">Items</h3>
-                <div className="space-y-4">
-                  {order.items?.map((item: any, idx: number) => (
-                    <div key={idx} className="flex gap-4 items-center">
-                      <div className="w-16 h-20 bg-[#222] rounded-md overflow-hidden flex-shrink-0">
-                        {item.image ? (
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white/20"><Package size={20} /></div>
-                        )}
+              {/* Progress Bar UI */}
+              <div className="mb-24 relative pt-8">
+                {order.status === 'cancelled' ? (
+                  <div className="p-6 border border-crimson/20 bg-crimson/5 text-center">
+                    <p className="font-accent tracking-widest text-xs uppercase text-crimson">This order has been cancelled.</p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="absolute top-10 left-0 w-full h-[1px] bg-white/10 z-0" />
+                    <div 
+                      className="absolute top-10 left-0 h-[1px] bg-white transition-all duration-1000 ease-out z-0"
+                      style={{ width: `${((getStatusStep(order.status) - 1) / 2) * 100}%` }}
+                    />
+
+                    <div className="relative z-10 flex justify-between">
+                      {[
+                        { label: 'Confirmed', icon: Clock, step: 1 },
+                        { label: 'En Route', icon: Truck, step: 2 },
+                        { label: 'Delivered', icon: CheckCircle, step: 3 }
+                      ].map((s, idx) => {
+                        const active = getStatusStep(order.status) >= s.step;
+                        const current = getStatusStep(order.status) === s.step;
+                        return (
+                          <div key={idx} className="flex flex-col items-center">
+                            <div className={`w-6 h-6 flex items-center justify-center bg-black border ${active ? 'border-white text-white' : 'border-white/10 text-white/20'} mb-4 rounded-full transition-colors duration-500 delay-300`}>
+                              <div className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-transparent'} ${current && 'animate-pulse'}`} />
+                            </div>
+                            <span className={`font-accent tracking-widest text-[10px] uppercase ${active ? 'text-white' : 'text-white/30'}`}>
+                              {s.label}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Details Split */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+                <div className="lg:col-span-7 space-y-12">
+                  <div>
+                    <h3 className="font-accent tracking-[0.2em] text-[10px] text-white/40 uppercase mb-6 flex items-center">
+                      <Tag size={12} className="mr-2" /> Manifest
+                    </h3>
+                    <div className="divide-y divide-white/5 border-t border-white/5">
+                      {order.items?.map((item: any, idx: number) => (
+                        <div key={idx} className="py-6 flex gap-6 group">
+                          <div className="w-20 h-24 bg-white/5 overflow-hidden">
+                            {item.image ? (
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover grayscale mix-blend-screen opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-white/10"><Package size={20} /></div>
+                            )}
+                          </div>
+                          <div className="flex-1 flex flex-col justify-center">
+                            <p className="font-body text-sm uppercase tracking-wide mb-1">{item.name}</p>
+                            <p className="text-white/40 font-accent text-[10px] tracking-widest uppercase mb-auto">Size {item.size} • Qty {item.quantity}</p>
+                            <p className="font-accent text-xs tracking-widest">PKR {item.price?.toLocaleString()}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-5 space-y-12">
+                  <div>
+                    <h3 className="font-accent tracking-[0.2em] text-[10px] text-white/40 uppercase mb-6 flex items-center">
+                      <MapPin size={12} className="mr-2" /> Destination
+                    </h3>
+                    <div className="font-body text-sm leading-relaxed text-white/70 bg-white/[0.02] p-6 border border-white/5">
+                      <p className="text-white uppercase tracking-wide mb-2">{order.customer?.firstName} {order.customer?.lastName}</p>
+                      <p>{order.customer?.address}</p>
+                      {order.customer?.apartment && <p>{order.customer?.apartment}</p>}
+                      <p>{order.customer?.city}, {order.customer?.postalCode}</p>
+                      <p className="mt-4">{order.customer?.phone}</p>
+                      <p className="text-white/40">{order.customer?.email}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-accent tracking-[0.2em] text-[10px] text-white/40 uppercase mb-6">Summary</h3>
+                    <div className="space-y-4 font-accent text-xs tracking-widest uppercase bg-white/[0.02] p-6 border border-white/5">
+                      <div className="flex justify-between text-white/50">
+                        <span>Subtotal</span>
+                        <span>PKR {order.total?.toLocaleString()}</span>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-sm md:text-base">{item.name}</p>
-                        <p className="text-white-muted text-xs md:text-sm">Size: {item.size}</p>
-                        <p className="text-white-muted text-xs md:text-sm">Qty: {item.quantity}</p>
+                      <div className="flex justify-between text-white/50">
+                        <span>Shipping</span>
+                        <span>Complimentary</span>
                       </div>
-                      <div className="text-right font-medium">
-                        PKR {item.price?.toLocaleString()}
+                      <div className="flex justify-between text-white pt-4 border-t border-white/10 mt-4">
+                        <span>Total</span>
+                        <span>PKR {order.total?.toLocaleString()}</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="border-t border-white/10 pt-6 mt-6">
-                <div className="flex justify-between items-center mb-2 text-white-muted text-sm">
-                  <span>Subtotal</span>
-                  <span>PKR {order.total?.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center mb-4 text-white-muted text-sm">
-                  <span>Shipping</span>
-                  <span>Free</span>
-                </div>
-                <div className="flex justify-between items-center font-bold text-lg">
-                  <span>Total</span>
-                  <span>PKR {order.total?.toLocaleString()}</span>
+                  </div>
                 </div>
               </div>
             </div>
-            
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </main>
       <Footer />
     </div>
