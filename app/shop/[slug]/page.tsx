@@ -92,7 +92,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
           <div className="lg:w-[60%] flex gap-4 lg:gap-6 flex-col-reverse md:flex-row">
             {/* Thumbnails */}
             <div className="flex md:flex-col gap-4 overflow-x-auto md:w-24 shrink-0 hide-scrollbar pb-2 md:pb-0">
-               {product.images.map((img, i) => (
+               {product.images.map((img: string, i: number) => (
                  <button 
                    key={i} 
                    onClick={() => setActiveImageIndex(i)}
@@ -150,7 +150,7 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
                </div>
                
                <div className="grid grid-cols-4 md:grid-cols-5 gap-3">
-                 {product.sizes.map(size => (
+                 {product.sizes.map((size: string) => (
                    <button
                      key={size}
                      onClick={() => setSelectedSize(size)}

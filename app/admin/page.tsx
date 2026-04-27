@@ -135,7 +135,7 @@ export default function AdminDashboard() {
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}
                   labelStyle={{ fontWeight: 'bold', color: '#111', fontFamily: 'inherit' }}
                   itemStyle={{ color: '#111', fontFamily: 'inherit' }}
-                  formatter={(value: number) => [`PKR ${value.toLocaleString()}`, 'Revenue']}
+                  formatter={(value: any) => [`PKR ${Number(value).toLocaleString()}`, 'Revenue']}
                 />
                 <Area type="monotone" dataKey="revenue" stroke="#111" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
               </AreaChart>

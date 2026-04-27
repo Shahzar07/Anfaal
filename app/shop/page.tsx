@@ -51,7 +51,7 @@ function ShopContent() {
 
     // Size filter (checks if product has at least one of the selected sizes)
     if (selectedSizes.length > 0) {
-      result = result.filter(p => p.sizes.some(size => selectedSizes.includes(size)));
+      result = result.filter(p => p.sizes.some((size: string) => selectedSizes.includes(size as any)));
     }
 
     // Price filter

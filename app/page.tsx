@@ -16,7 +16,7 @@ export default function Home() {
     async function loadProducts() {
       try {
         const snap = await getDocs(collection(db, 'products'));
-        let firestoreProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let firestoreProducts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
 
         // Quick migration fixing broken Unsplash URLs from early seed data
         const brokenImageMap: Record<string, string> = {
