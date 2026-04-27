@@ -13,6 +13,7 @@ import { useCartStore } from '@/lib/store';
 export default function ProductDetail({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -67,9 +68,18 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
       alert("Please select a size first.");
       return;
     }
+    if (product.colors && Array.isArray(product.colors) && product.colors.length > 0 && !selectedColor) {
+      alert("Please select a color first.");
+      return;
+    }
+    
     // Size type is inferred from types.ts where Size doesn't expect arbitrary string. 
-    // Types.ts size is 'S'|'M'|'L'|'XL'|'XXL'. Fast cast.
-    addItem(product, selectedSize as any, quantity);
+    const itemToAdd = { ...product };
+    if (selectedColor) {
+      itemToAdd.name = `${product.name} - ${selectedColor}`; // Append color to name for cart display
+    }
+    
+    addItem(itemToAdd, selectedSize as any, quantity);
   };
 
   return (
@@ -141,6 +151,31 @@ export default function ProductDetail({ params }: { params: Promise<{ slug: stri
             </p>
 
             <div className="w-full h-px bg-white-subtle mb-8" />
+
+            {/* Color Selector (if available) */}
+            {product.colors && Array.isArray(product.colors) && product.colors.length > 0 && (
+              <div className="mb-6">
+                 <div className="flex justify-between items-end mb-4">
+                   <span className="font-accent tracking-widest text-sm uppercase text-white">Select Color</span>
+                 </div>
+                 
+                 <div className="flex flex-wrap gap-3">
+                   {product.colors.map((color: string) => (
+                     <button
+                       key={color}
+                       onClick={() => setSelectedColor(color)}
+                       className={`py-2 px-6 font-accent text-xs tracking-widest transition-all duration-300 border ${
+                         selectedColor === color 
+                         ? 'bg-white border-white text-black scale-[1.02]' 
+                         : 'border-white-subtle text-white hover:border-white'
+                       }`}
+                     >
+                       {color}
+                     </button>
+                   ))}
+                 </div>
+              </div>
+            )}
 
             {/* Size Selector */}
             <div className="mb-8">

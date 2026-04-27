@@ -13,7 +13,7 @@ export function Footer() {
       </div>
 
       <div className="container mx-auto px-6 lg:px-12 z-10 relative">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
             <h3 className="font-display text-3xl mb-4 text-white">ANFAAL</h3>
             <p className="font-body text-white-muted text-sm max-w-sm leading-relaxed mb-6">
@@ -31,6 +31,14 @@ export function Footer() {
               <li><Link href="/shop?category=t-shirts" className="hover:text-crimson transition-colors duration-200">T-Shirts</Link></li>
               <li><Link href="/shop?category=hoodies" className="hover:text-crimson transition-colors duration-200">Hoodies</Link></li>
               <li><Link href="/shop?category=tracksuits" className="hover:text-crimson transition-colors duration-200">Tracksuits</Link></li>
+            </ul>
+          </div>
+
+          <div className="col-span-1">
+            <h4 className="font-accent tracking-widest text-sm text-white-muted mb-6">SUPPORT</h4>
+            <ul className="space-y-4 font-body text-sm text-white">
+              <li><Link href="/track" className="hover:text-crimson transition-colors duration-200">Track Order</Link></li>
+              <li><Link href="/contact" className="hover:text-crimson transition-colors duration-200">Contact Us</Link></li>
             </ul>
           </div>
           

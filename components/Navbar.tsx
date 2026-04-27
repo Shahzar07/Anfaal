@@ -83,6 +83,7 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-8 font-accent tracking-[0.15em] text-sm text-white">
             <Link href="/shop?category=tracksuits" className="hover:text-crimson transition-colors">TRACKSUITS</Link>
             <Link href="/about" className="hover:text-crimson transition-colors">ABOUT</Link>
+            <Link href="/track" className="hover:text-crimson transition-colors">TRACK ORDER</Link>
             <div className="flex items-center gap-6 ml-4">
               <Link href="/wishlist">
                 <Heart className="hover:text-crimson cursor-pointer transition-colors stroke-[1.5]" size={20} />
@@ -130,6 +131,7 @@ export function Navbar() {
               <li><Link href="/shop?category=hoodies" className="hover:text-crimson text-white block">Hoodies</Link></li>
               <li><Link href="/shop?category=tracksuits" className="hover:text-crimson text-white block">Tracksuits</Link></li>
               <li><Link href="/about" className="hover:text-crimson text-white block mt-6">About Brand</Link></li>
+              <li><Link href="/track" className="hover:text-crimson text-white block">Track Order</Link></li>
             </ul>
             <div className="mt-auto pb-8">
               <p className="font-accent tracking-widest text-xs text-white-muted mb-4">JOIN THE CIRCLE</p>
